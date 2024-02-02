@@ -11,4 +11,7 @@ Accessible via le lien suivant: https://drive.google.com/drive/folders/1lspng91a
 Accessible via le lien suivant: https://github.com/TacTac315/PIR_Ball_Balancing
 
 ## Guide du PIR
-Accessible via le lien suivat: https://docs.google.com/presentation/d/1oQSozAxNd_onhYN5Y_eiVXRHdkCVRMCHHFUxAfs1lPQ/edit?usp=sharing
+Accessible via le lien suivant: https://docs.google.com/presentation/d/1oQSozAxNd_onhYN5Y_eiVXRHdkCVRMCHHFUxAfs1lPQ/edit?usp=sharing
+
+## Informations techniques carte raspberrypi
+Accessible via le lien suivant : https://www.raspberrypi.com/documentation/computers/raspberry-pi.html

@@ -4,3 +4,7 @@ PWM (pulse-width modulation)
   Hardware PWM available on GPIO12, GPIO13, GPIO18, GPIO19
 
 
+Pour communiquer avec la Rasberry Pi sur Matlab : 
+MATLAB Support Package for Raspberry Pi Hardware
+on utilise la partie Pulse Width Modulation et ses fonctions
+A retrouver sur https://fr.mathworks.com/help/supportpkg/raspberrypiio/pwm.html

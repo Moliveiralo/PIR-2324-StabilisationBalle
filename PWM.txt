@@ -1,0 +1,6 @@
+As well as simple input and output devices, the GPIO pins can be used with a variety of alternative functions, some are available on all pins, others on specific pins.
+PWM (pulse-width modulation)
+  Software PWM available on all pins
+  Hardware PWM available on GPIO12, GPIO13, GPIO18, GPIO19
+
+

@@ -1,7 +1,7 @@
 # PIR 2023-2024 | Stabilisation d'une balle
 OLIVEIRA LOPES Maxime - NAJI Inès - COUSTON Emma - BIGOT Timothé - BEGHIN Léa
 
-![image](https://github.com/Moliveiralo/PIR-2324-StabilisationBalle/assets/133717115/4486b05f-7cc2-4fb1-ad8d-cf97d581ca0e)
+![image](https://github.com/Moliveiralo/PIR-2324-StabilisationBalle/assets/133717115/f882e5e3-0ce0-412b-aa79-9dcd2ed4e441)
 
 ## Trello
 Accessible via le lien suivant: https://trello.com/invite/b/O5i0e5QD/ATTIa336ba5bb40d894ab62b6f74e209b60c67E6674F/pir-stabilisation-de-balle-2023-2024

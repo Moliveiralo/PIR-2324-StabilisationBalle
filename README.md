@@ -20,6 +20,24 @@ Accessible via le lien suivant : https://www.raspberrypi.com/documentation/compu
 
 ## Erreur matlab
 warning :
+Error evaluating 'PostLoadFcn' callback of block_diagram 'instrumentlib'. 
+Callback string is 'instrumentslgate('privateinstrumentslinitlib')'
+Caused by:
+License checkout failed.
+License Manager Error -10
+Your license for Instr_Control_Toolbox has expired. 
+If you are not using a trial license contact your License Administrator to obtain an updated license. 
+Otherwise, contact your Sales Representative for a trial extension.
+
+Troubleshoot this issue by visiting: 
+https://www.mathworks.com/support/lme/R2020a/10
+
+Diagnostic Information:
+Feature: Instr_Control_Toolbox 
+License path: C:\Users\vorms\AppData\Roaming\MathWorks\MATLAB\R2020a_licenses;C:\Program Files\MATLAB\R2020a\licenses\license.dat;C:\Program Files\MATLAB\R2020a\licenses\network.lic;C:\Program Files\MATLAB\R2020a\licenses\trial_11202164_R2020a.lic 
+Licensing error: -10,32. 
+
+warning :
 Parameter precision loss occurred for 'opacity' of 'Ball_Detection_and_PID/Draw Shapes'. The parameter's value cannot be represented exactly using the run-time data type. A small quantization error has occurred. To disable this warning or error, in the Configuration Parameters > Diagnostics > Data Validity pane, set the 'Detect precision loss' option in the Parameters group to 'none'. [3 similar]
 
 erreur :

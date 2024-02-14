@@ -19,6 +19,10 @@ Accessible via le lien suivant: https://docs.google.com/presentation/d/1oQSozAxN
 Accessible via le lien suivant : https://www.raspberrypi.com/documentation/computers/raspberry-pi.html
 
 ## Erreur matlab
+warning :
+Parameter precision loss occurred for 'opacity' of 'Ball_Detection_and_PID/Draw Shapes'. The parameter's value cannot be represented exactly using the run-time data type. A small quantization error has occurred. To disable this warning or error, in the Configuration Parameters > Diagnostics > Data Validity pane, set the 'Detect precision loss' option in the Parameters group to 'none'. [3 similar]
+
+erreur :
 An error occurred while running the simulation and the simulation was terminated
 Caused by:
 Domain error. To compute complex results from real x, use 'asin(complex(x))'.

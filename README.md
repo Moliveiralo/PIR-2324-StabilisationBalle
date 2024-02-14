@@ -17,3 +17,11 @@ Accessible via le lien suivant: https://docs.google.com/presentation/d/1oQSozAxN
 
 ## Informations techniques carte raspberrypi
 Accessible via le lien suivant : https://www.raspberrypi.com/documentation/computers/raspberry-pi.html
+
+## Erreur matlab
+An error occurred while running the simulation and the simulation was terminated
+Caused by:
+Domain error. To compute complex results from real x, use 'asin(complex(x))'.
+	Error in asin.m (line 14)
+		        coder.internal.error('Coder:toolbox:ElFunDomainError',mfilename);
+	Error in 'Ball_Detection_and_PID/PosToPlateAngle' (line 3) 

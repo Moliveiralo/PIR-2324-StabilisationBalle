@@ -6,15 +6,18 @@
  m = 2.7; % Masse de la balle en g
  r = 0.022; % Rayon de la balle en m
  g = 9.81; % en m.s^-2
- x %position de la balle sur le plateau sur l'axe x
- y %position de la balle sur le plateau sur l'axe y
+ R = 26.8/2;% Rayon du plateau
+ %I = 2/5*m*r^2*(1-(1-exp(1)/r)^5)/(1-(1-exp(1)/r)^3); %moment d'inertie de la balle
+ I = 2/3*m*r^2; 
  
- %Entrées du systeme
- theta_x %angle du plateau avec l'axe x => Beta 
- theta_y %angle du plateau avec l'axe y => alpha
+ % Fonctions de transfert du système 
+ %numx = -2*m*g*R*r^2;
+ %denx = [R*2*(m*r^2+I) 0 0]; 
  
- tau_x %couple appliqué a l'axe x
- tau_y %couple appliqué a l'axe y
- J %moment d'inertie de la balle
- Jp %moment d'inertie du plateau
+%  numx = 5/7*g; 
+%  denx = [1 0 0];
+ numx = m*g;
+ denx = [(m+I/r^2) 0 0]; 
  
+ deny = denx; 
+ numy = numx; 

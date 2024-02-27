@@ -1,6 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simulation du système plateau + ball %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear all
+close all 
 
 % Données du système 
  m = 2.7; % Masse de la balle en g
@@ -14,10 +16,18 @@
  %numx = -2*m*g*R*r^2;
  %denx = [R*2*(m*r^2+I) 0 0]; 
  
-%  numx = 5/7*g; 
-%  denx = [1 0 0];
- numx = m*g;
- denx = [(m+I/r^2) 0 0]; 
+ numx = 5/7*g; 
+ denx = [1 0 0];
+ 
+ %numx = m*g;
+% denx = [(m+I/r^2) 0 0]; 
  
  deny = denx; 
  numy = numx; 
+ 
+ 
+ aff=sim('simu_pid.slx')
+ plot(aff.entree)
+ hold on
+ plot(aff.sortie)
+ 

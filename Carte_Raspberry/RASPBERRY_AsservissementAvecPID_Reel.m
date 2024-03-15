@@ -1,34 +1,32 @@
-% This will clear both rpi and cam variables
 clear rpi
 clear cam
 
-rpi = raspi('10.105.1.112', 'pi', 'raspberry'); % Creation of the raspberry object
+rpi = raspi('10.105.1.112', 'pi', 'raspberry');
 
-cam = cameraboard(rpi,'Resolution','1280x720'); % Creation of the camera object
+cam = cameraboard(rpi,'Resolution','1280x720');
 
+img = snapshot(cam);
+image(img);
+drawnow;
 
-% The program will loop indefinitely
-while 1
-    %% ================================================================
-    %                           IMAGE ACQUISITION
-    %  ================================================================
-    img = snapshot(cam); % An image is taken from the camera object
-    image(img); % Convert the image into a plottable image
-    drawnow; % Plot the image
-    
-    
-end
 
 %% ================================================================
 %                               DATA
 %  ================================================================
-Xcenter = 0;
+%Set the coordonates of the center of the plate 
+Xcenter = 0; 
+Ycenter = 0; 
+
+%Where we want the ball to be at the end (in the center to be stable)
 Xconsigne = 0;
-Ycenter = 0;
 Yconsigne = 0;
-Kx=1/640;
-Ky=-1/640;
-AreaCoeff=400;
+
+%Gain to normalise the position of the ball
+NormX=1/640;
+NormY=-1/640;
+
+%Gain......
+AreaCoeff=1/400;
 
 
 %% ================================================================
@@ -91,28 +89,40 @@ while true
         break;
     end
 end
-
+%% ================================================================
+%                    THE DISTANCE TO THE CENTER (NORMALISE)
+%  ================================================================
+X_ball = ballX*normX- XCenter; 
+Y_ball = ballY*normY - YCenter;
 
 
 %% ================================================================
 %                           CONCATENATE
 %  ================================================================
-
-Shape=[int32(X(1)), int32(Y(1)), int32(Area(1))];
+% Block divide (Bound between detect orange ball and input Area of block Concatenate )
+Area(1) = ballArea*AreaCoeff; 
+%Block Concatenate
+Shape = [int32(X(1)), int32(Y(1)), int32(Area(1))]; 
 
 
 
 %% ================================================================
 %                              PIDs
 %  ================================================================
-Px=0;
-Ix=0;
-Dx=0;
+epsilonX = Xconsigne - X_ball;
+epsilonY = Yconsigne - Y_ball;
 
-Py=0;
-Iy=0;
-Dy=0;
+Kp_x=0;
+Ti_x=0;
+Td_x=0;
 
+Kp_y=0;
+Ti_y=0;
+Td_y=0;
+
+%Transfert fonction of the PID
+PID_x = Kp_x*tf([Td_x*Ti_x Ti_x 1], [Ti_x 0]);
+PID_y = Kp_y*tf([Td_y*Ti_y Ti_y 1], [Ti_y 0]);
 
 %% ================================================================
 %                    POSITION TO PLATE ANGLE
@@ -172,11 +182,3 @@ CValues=griddata(data.alpha,data.beta,data.AngleservoC,Alpha,Beta);
 %% ================================================================
 %                      UPDATING THE ACTUATORS
 %  ================================================================
-% Documentation: https://fr.mathworks.com/help/supportpkg/raspberrypiio/referencelist.html?type=function
-%
-% PIN LAYOUT ON THE RASPBERRY
-% GPIO 13 --> SERVO 0
-% GPIO 26 --> SERVO 1
-% GPIO 19 --> SERVO 2
-
-

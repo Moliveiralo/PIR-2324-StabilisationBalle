@@ -1,14 +1,23 @@
+% This will clear both rpi and cam variables
 clear rpi
 clear cam
 
-rpi = raspi('10.105.1.112', 'pi', 'raspberry');
+rpi = raspi('10.105.1.112', 'pi', 'raspberry'); % Creation of the raspberry object
 
-cam = cameraboard(rpi,'Resolution','1280x720');
+cam = cameraboard(rpi,'Resolution','1280x720'); % Creation of the camera object
 
-img = snapshot(cam);
-image(img);
-drawnow;
 
+% The program will loop indefinitely
+while 1
+    %% ================================================================
+    %                           IMAGE ACQUISITION
+    %  ================================================================
+    img = snapshot(cam); % An image is taken from the camera object
+    image(img); % Convert the image into a plottable image
+    drawnow; % Plot the image
+    
+    
+end
 
 %% ================================================================
 %                               DATA
@@ -163,3 +172,11 @@ CValues=griddata(data.alpha,data.beta,data.AngleservoC,Alpha,Beta);
 %% ================================================================
 %                      UPDATING THE ACTUATORS
 %  ================================================================
+% Documentation: https://fr.mathworks.com/help/supportpkg/raspberrypiio/referencelist.html?type=function
+%
+% PIN LAYOUT ON THE RASPBERRY
+% GPIO 13 --> SERVO 0
+% GPIO 26 --> SERVO 1
+% GPIO 19 --> SERVO 2
+
+

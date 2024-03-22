@@ -1,51 +1,34 @@
+% This will clear both rpi and cam variables
 clear rpi
 clear cam
 
-rpi = raspi('10.105.1.112', 'pi', 'raspberry');
+rpi = raspi('10.105.1.112', 'pi', 'raspberry'); % Creation of the raspberry object
 
-cam = cameraboard(rpi,'Resolution','1280x720');
+cam = cameraboard(rpi,'Resolution','1280x720'); % Creation of the camera object
 
-img = snapshot(cam);
-image(img);
-drawnow;
 
-%% ================================================================
-%                        DATA LOOKUP TABLE : load before everything else
-%  ================================================================
-% Documentation: https://www.mathworks.com/help/ecoder/ug/lookup-table-function-code-replacement-sc.html
-%The function of this program is to : 
-% - Load the AnglePlateau->AngleServos correspondence file generated
-% using Johan Link's Python program
-% - Convert the data into a Lookup Table to make them usable
-% by Simulink
-load('data.mat');
-xrange = min(data.alpha):0.2:max(data.alpha);
-yrange = min(data.beta):0.2:max(data.beta);
-
-[Alpha,Beta]=meshgrid(xrange,yrange);
-
-AValues=griddata(data.alpha,data.beta,data.AngleservoA,Alpha,Beta);
-BValues=griddata(data.alpha,data.beta,data.AngleservoB,Alpha,Beta);
-CValues=griddata(data.alpha,data.beta,data.AngleservoC,Alpha,Beta);
-
+% The program will loop indefinitely
+while 1
+    %% ================================================================
+    %                           IMAGE ACQUISITION
+    %  ================================================================
+    img = snapshot(cam); % An image is taken from the camera object
+    image(img); % Convert the image into a plottable image
+    drawnow; % Plot the image
+    
+    
+end
 
 %% ================================================================
 %                               DATA
 %  ================================================================
-%Set the coordonates of the center of the plate 
-Xcenter = 0; 
-Ycenter = 0; 
-
-%Where we want the ball to be at the end (in the center to be stable)
+Xcenter = 0;
 Xconsigne = 0;
+Ycenter = 0;
 Yconsigne = 0;
-
-%Gain to normalise the position of the ball
-NormX=1/640;
-NormY=-1/640;
-
-%Gain......
-AreaCoeff=1/400;
+Kx=1/640;
+Ky=-1/640;
+AreaCoeff=400;
 
 
 %% ================================================================
@@ -108,100 +91,92 @@ while true
         break;
     end
 end
-%% ================================================================
-%                    THE DISTANCE TO THE CENTER (NORMALISE)
-%  ================================================================
-X_ball = ballX*normX- XCenter; 
-Y_ball = ballY*normY - YCenter;
+
 
 
 %% ================================================================
 %                           CONCATENATE
 %  ================================================================
-% Block divide (Bound between detect orange ball and input Area of block Concatenate )
-Area(1) = ballArea*AreaCoeff; 
-%Block Concatenate
-Shape = [int32(X(1)), int32(Y(1)), int32(Area(1))]; 
+
+Shape=[int32(X(1)), int32(Y(1)), int32(Area(1))];
 
 
 
 %% ================================================================
 %                              PIDs
 %  ================================================================
-epsilonX = Xconsigne - X_ball;
-epsilonY = Yconsigne - Y_ball;
+Px=0;
+Ix=0;
+Dx=0;
 
-%Parameters of the PID for x and y axes 
-%To determinate
-Kp_x=0;
-Ti_x=0;
-Td_x=0;
+Py=0;
+Iy=0;
+Dy=0;
 
-Kp_y=0;
-Ti_y=0;
-Td_y=0;
-
-%Transfert fonction of the PID
-PID_x = Kp_x*tf([Td_x*Ti_x Ti_x 1], [Ti_x 0]);
-PID_y = Kp_y*tf([Td_y*Ti_y Ti_y 1], [Ti_y 0]);
 
 %% ================================================================
 %                    POSITION TO PLATE ANGLE
 %  ================================================================
-%Bound between PID and PosToPlateAngle
-x= PID_x;
-y=PID_y;
 
 toDeg=180/pi;
+%%alpha=asin(sqrt(x^2+y^2))*toDeg;
+
+%alpha = asin(x)*toDeg;;
+% gamma = atan(y)*toDeg;
 
 gamma = atan(y/x)*toDeg;
 
 if (x>0 && y>=0)
-    beta_query=180-abs(gamma);
+    beta=180-abs(gamma);
  elseif (x>0 && y<=0)
-     beta_query=180+abs(gamma);
+     beta=180+abs(gamma);
  elseif(x<0 && y>=0)
-    beta_query=abs(gamma);
+    beta=abs(gamma);
 elseif(x<0 && y<=0)
-    beta_query=360-abs(gamma);
+    beta=360-abs(gamma);
 elseif(x==0 && y>= 0)
-    beta_query=90;
+    beta=90;
 else
-    beta_query=270;
+    beta=270;
 end
+
+%beta = asin(y)*toDeg;;    
 
 if (sqrt(x^2+y^2)>1)
-    alpha_query = 35; 
+    alpha = 35; 
 else
-    alpha_query=asin(sqrt(x^2+y^2))*toDeg;
+    alpha=asin(sqrt(x^2+y^2))*toDeg;
 end
 
 
-%Saturation of alpha
-if (alpha_query >35)
-    alpha_query=35;
-end
 %% ================================================================
-%                      SEARCH INTO THE LOOKUP TABLE
+%                        DATA LOOKUP TABLE
 %  ================================================================
-%Test fonctionnel après vérification sur le lookup table editor pour les 3
-%servo
-%alpha_query=1.8; 
-%beta_query=4.6;
+% Documentation: https://www.mathworks.com/help/ecoder/ug/lookup-table-function-code-replacement-sc.html
+%Ce programme a pour fonction de : 
+% - Charger le fichier de correspondance AnglePlateau->AngleServos généré
+%   grâce au programme Python de Johan Link
+% - Convertir les données en Lookup Table afin de les rendres exploitables
+%   par Simulink
+load('data.mat');
+xrange = min(data.alpha):0.2:max(data.alpha);
+yrange = min(data.beta):0.2:max(data.beta);
 
-% Avalues , Bvalues and Cvalues are matrices of angles for the servo motors
-% depending on Alpha (abscissa) and Beta (ordonates)
-% interp2 search into these matrices for the indexes alpha and beta
-AngleServo1=interp2(Alpha,Beta,AValues,alpha_query,beta_query);
-AngleServo2=interp2(Alpha,Beta,BValues,alpha_query,beta_query);
-AngleServo3=interp2(Alpha,Beta,CValues,alpha_query,beta_query);
+[Alpha,Beta]=meshgrid(xrange,yrange);
+
+AValues=griddata(data.alpha,data.beta,data.AngleservoA,Alpha,Beta);
+BValues=griddata(data.alpha,data.beta,data.AngleservoB,Alpha,Beta);
+CValues=griddata(data.alpha,data.beta,data.AngleservoC,Alpha,Beta);
+
 
 %% ================================================================
 %                      UPDATING THE ACTUATORS
 %  ================================================================
-%Vector concatenate
-Vector_ABC=[AValues, BValues, CValues];
-
-%Zero Order Hold
+% Documentation: https://fr.mathworks.com/help/supportpkg/raspberrypiio/referencelist.html?type=function
+%
+% PIN LAYOUT ON THE RASPBERRY
+% GPIO 13 --> SERVO 0
+% GPIO 26 --> SERVO 1
+% GPIO 19 --> SERVO 2
 
 

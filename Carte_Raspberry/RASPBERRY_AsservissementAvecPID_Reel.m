@@ -228,4 +228,37 @@ Vector_ABC=[AValues, BValues, CValues];
 % GPIO 26 --> SERVO 1
 % GPIO 19 --> SERVO 2
 
+% PIN LAYOUT ON THE RASPBERRY
+% GPIO 13 --> SERVO 0
+% GPIO 26 --> SERVO 1
+% GPIO 19 --> SERVO 2
 
+
+%Declration des pins en fonction du servomoteur
+servo0=13;
+servo1=26;
+servo2=19;
+
+
+%Configuration des PIN en PWM
+configurePin(r, servo1, 'PWM')
+configurePin(r, servo2, 'PWM')
+configurePin(r, servo0, 'PWM')
+
+%Configuration de la fréquence des PWM
+writePWMFrequency(r, servo1, 200)
+writePWMFrequency(r, servo2, 200)
+writePWMFrequency(r, servo0, 200)
+
+%Fonction pour trouver la valeur du duty cycle
+    %Fonction affine : ax+b = y
+a = 5.406;
+b = -48.65;
+alpha0 = (AngleServo1-b)/a;
+alpha1 = (AngleServo2-b)/a;
+alpha2 = (AngleServo3-b)/a;
+
+%Configuration du duty cycle sur les PWM
+writePWMDutyCycle(r, servo0, alpha0)
+writePWMDutyCycle(r, servo1, alpha1)
+writePWMDutyCycle(r, servo2, alpha2)

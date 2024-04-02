@@ -2,7 +2,7 @@
 clear rpi
 clear cam
 
-rpi = raspi('10.105.1.112', 'pi', 'raspberry'); % Creation of the raspberry object
+rpi = raspi('10.105.1.112', 'pi', 'raspberry'); %Creation of the raspberry object
 
 cam = cameraboard(rpi,'Resolution','640x480'); % Creation of the camera object
 
@@ -15,16 +15,7 @@ cam = cameraboard(rpi,'Resolution','640x480'); % Creation of the camera object
 % using Johan Link's Python program
 % - Convert the data into a Lookup Table to make them usable
 % by Simulink
-load('data.mat');
-xrange = min(data.alpha):0.2:max(data.alpha);
-yrange = min(data.beta):0.2:max(data.beta);
-
-[Alpha,Beta]=meshgrid(xrange,yrange);
-
-AValues=griddata(data.alpha,data.beta,data.AngleservoA,Alpha,Beta);
-BValues=griddata(data.alpha,data.beta,data.AngleservoB,Alpha,Beta);
-CValues=griddata(data.alpha,data.beta,data.AngleservoC,Alpha,Beta);
-
+x
 
 %% ================================================================
 %                               DATA
@@ -52,8 +43,11 @@ while 1
     %  ================================================================
     
     img = snapshot(cam); % An image is taken from the camera object
-    image(img); % Convert the image into a plottable image
-    drawnow; % Plot the image
+    image(img) % Convert the image into a plottable image
+    drawnow; % Plot the image 
+    
+    %QUESTION : faudrait pas enlever 'drawnow' 
+    %pour laisser juste le plot final (imshow) avec le cercle dessiné ?
     
     %% ================================================================
     %                       DETECT ORANGE BALL
@@ -136,54 +130,65 @@ while 1
     %Block Concatenate
     Shape = [int32(X_ball(1)), int32(Y_ball(1)), int32(Area(1))]; 
     
+    print = "concatenate ok"
+    %%CONCATENATE INUTILE DU COUP DANS CE CAS (A CONFIRMER)
     
+    %% ================================================================
+    %                           DRAW SHAPE
+    %  ================================================================
     
+    %RGB = insertShape(I, SHAPE, POSITION) returns a truecolor image with
+    %SHAPE drawn in it. The input image, I, can be either a truecolor or
+    %grayscale image.
     
+    %Exemple :  
+    %   I = imread("peppers.png");
+    %   RGB = insertShape(I,"circle",[150 280 35],LineWidth=5);
     
-    
-    
-    
-    
-    
-    
-    
-    % ICI IL MANQUE LA PARTIE OU ON GENERE LA FORME DU CERCLE
-    % ET OU ON L'AFFICHE SUR UN PLOT AVEC L'IMAGE INITIALE
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    %DrawCircle=insertShape(Support_a_modifier, Forme_a_dessiner, Dimension et placement);
+    %Pour un cercle : dimensione et placement = [x_centre y_centre rayon].
+    DrawCircle=insertShape(img, "Filledcircle",[ballX ballY 35]);
+    imshow(DrawCircle);
     
     print = "après après après après"
 
-
+end
     %% ================================================================
-    %                              PIDs
+    %                              PID controle
     %  ================================================================
     epsilonX = Xconsigne - X_ball;
     epsilonY = Yconsigne - Y_ball;
 
-    
+ 
     %Parameters of the PID for x and y axes 
     %To determinate
     Kp_x=1;
-    Ti_x=1;
-    Td_x=1;
+    Ki_x=1;
+    Kd_x=1;
 
     Kp_y=1;
-    Ti_y=1;
-    Td_y=1;
+    Ki_y=1;
+    Kd_y=1;
 
     %Transfert fonction of the PID
-    PID_x = Kp_x*tf([Td_x*Ti_x Ti_x 1], [Ti_x 0]);
-    PID_y = Kp_y*tf([Td_y*Ti_y Ti_y 1], [Ti_y 0]);
+    %PID_x = Kp_x*tf([Td_x*Ti_x Ti_x 1], [Ti_x 0]);
+    %PID_y = Kp_y*tf([Td_y*Ti_y Ti_y 1], [Ti_y 0]);
     
+    
+    %Correction (par rapport au commentaire du code qui bloque) (Méthode de Johan Link)  =>
+    %On traite les axes x et y séparément donc on a besoin de 2 équation
+    Ix= Kp_x(Xconsigne-X_ball)+Ki_x*S_erreurX+Kd_x*((Xball_precedente-X_ball)/0.03);
+    Iy= Kp_y(Yconsigne-Y_ball)+Ki_y*S_erreurY+Kd_y*((Yball_precedente-Y_ball)/0.03);
+
+    %%QUESION : comment récupérer Xball_precedent et Yball_precedent 
+    
+    %S_erreur = somme de toutes les erreurs qui ont eu lieu depuis
+    %l'allumage du système
+    %if startBalanceBall == True => IMPLIQUE UNE CREATION DETECTION DU LANCEMENT
+        S_erreurX = S_erreurX + epsilonX;
+        S_erreurY = S_erreurY + epsilonY;
+      
+  
     print = "après après après après après"
 
 
@@ -195,17 +200,14 @@ while 1
 %     x=PID_x;
 %     y=PID_y;
 
-    x = PID_x*epsilonX;
-    y = PID_y*epsilonY;
+%     x = PID_x*epsilonX;
+%     y = PID_y*epsilonY;
 
-    
-    
-    
-    
-    
-    
-    
-    
+      x=Ix;
+      y=Iy;
+
+
+      
     %%%%%% LE CODE IL BLOQUE A CE NIVEAU LA
     
     % EN REALITE SI ON REGARDE LE SIMULINK X ET Y C'EST LA COMMANDE EN
@@ -214,13 +216,7 @@ while 1
     % FONCTIONS DE TRANSFERT
     
     
-    
-    
-    
-    
-    
-    
-    
+ 
     
     toDeg=180/pi;
 
@@ -309,7 +305,7 @@ while 1
     writePWMDutyCycle(r, servo2, alpha2)
     
     print = "c'est fini"
-end
+%end
 
 
 

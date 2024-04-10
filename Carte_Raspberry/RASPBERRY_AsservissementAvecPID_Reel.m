@@ -15,7 +15,14 @@ cam = cameraboard(rpi,'Resolution','640x480'); % Creation of the camera object
 % using Johan Link's Python program
 % - Convert the data into a Lookup Table to make them usable
 % by Simulink
-x
+
+load('data.mat');
+xrange = min(data.alpha):0.2:max(data.alpha);
+yrange = min(data.beta):0.2:max(data.beta);
+[Alpha,Beta]=meshgrid(xrange,yrange);
+AValues=griddata(data.alpha,data.beta,data.AngleservoA,Alpha,Beta);
+BValues=griddata(data.alpha,data.beta,data.AngleservoB,Alpha,Beta);
+CValues=griddata(data.alpha,data.beta,data.AngleservoC,Alpha,Beta);
 
 %% ================================================================
 %                               DATA

@@ -35,6 +35,9 @@ normY=-1/640;
 %Gain......
 AreaCoeff=1/400;
 
+%Set the precedent position of the ball at 0
+Xball_precedente = 0; 
+Yball_precedente = 0; 
 
 % The program will loop indefinitely
 while 1
@@ -154,7 +157,7 @@ while 1
 
 end
     %% ================================================================
-    %                              PID controle
+    %                              PID control
     %  ================================================================
     epsilonX = Xconsigne - X_ball;
     epsilonY = Yconsigne - Y_ball;
@@ -180,7 +183,6 @@ end
     Ix= Kp_x(Xconsigne-X_ball)+Ki_x*S_erreurX+Kd_x*((Xball_precedente-X_ball)/0.03);
     Iy= Kp_y(Yconsigne-Y_ball)+Ki_y*S_erreurY+Kd_y*((Yball_precedente-Y_ball)/0.03);
 
-    %%QUESION : comment récupérer Xball_precedent et Yball_precedent 
     
     %S_erreur = somme de toutes les erreurs qui ont eu lieu depuis
     %l'allumage du système
@@ -190,6 +192,10 @@ end
       
   
     print = "après après après après après"
+
+    %Set the actual position of the ball as the precedent
+    Xball_precedente = X_ball; 
+    Yball_precedente = Y_ball; 
 
 
     %% ================================================================

@@ -8,13 +8,14 @@ Projet initial sous Arduino avec Simulink et Matlab.
 Des corrections ont été faites sur simulink et matlab par rapport à l'année précédente.  
 Le problème de délai des servo-moteurs persiste, c'est pourquoi nous sommes passés sur une Raspberry, afin de centraliser toutes les informations : le code matlab tourne sur la raspberry et la caméra est directement branchée à la raspberry.   
 
-## Raspberry 
-  #### Matlab
-  Problème d'acquisition de l'image via simulink avec la Raspberry donc nécéessité de tout passer en code matlab à 100%
-  
-  #### Python
-  
+## Raspberry
+Transposition du projet initial sur Raspberry pi 4
+2 versions :  
+- Matlab 
+- Python
+
 ## Simulations
+Simulations afin de trouver un PID optimal 
  
 ## Liens suivi de projet
 #### Trello

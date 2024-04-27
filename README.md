@@ -9,7 +9,7 @@ Des corrections ont été faites sur simulink et matlab par rapport à l'année 
 Le problème de délai des servo-moteurs persiste, c'est pourquoi nous sommes passés sur une Raspberry, afin de centraliser toutes les informations : le code matlab tourne sur la raspberry et la caméra est directement branchée à la raspberry.   
 
 ## Raspberry
-Transposition du projet initial sur Raspberry pi 4
+Transposition du projet initial sur Raspberry pi 4  
 2 versions :  
 - Matlab 
 - Python

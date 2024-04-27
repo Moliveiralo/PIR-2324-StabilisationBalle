@@ -9,8 +9,8 @@ OLIVEIRA LOPES Maxime - NAJI Inès - COUSTON Emma - BIGOT Timothé - BEGHIN Léa
 
 ## Raspberry 
 
-  # Matlab
-  # Python
+  #### Matlab
+  #### Python
  
 
 ## Trello

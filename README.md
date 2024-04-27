@@ -3,6 +3,16 @@ OLIVEIRA LOPES Maxime - NAJI Inès - COUSTON Emma - BIGOT Timothé - BEGHIN Léa
 
 ![20240202_145909 (1)](https://github.com/Moliveiralo/PIR-2324-StabilisationBalle/assets/133717115/8f52fa8f-02b0-4ea9-83f4-4813ad36bbab)
 
+## Arduino 
+
+  
+
+## Raspberry 
+
+  # Matlab
+  # Python
+ 
+
 ## Trello
 Accessible via le lien suivant: https://trello.com/invite/b/O5i0e5QD/ATTIa336ba5bb40d894ab62b6f74e209b60c67E6674F/pir-stabilisation-de-balle-2023-2024
 

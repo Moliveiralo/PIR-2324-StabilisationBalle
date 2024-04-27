@@ -4,7 +4,9 @@ OLIVEIRA LOPES Maxime - NAJI Inès - COUSTON Emma - BIGOT Timothé - BEGHIN Léa
 ![20240202_145909 (1)](https://github.com/Moliveiralo/PIR-2324-StabilisationBalle/assets/133717115/8f52fa8f-02b0-4ea9-83f4-4813ad36bbab)
 
 ## Arduino 
-
+Projet initial sous Arduino avec Simulink et Matlab.
+Des corrections ont été faite sur simulink et matlab par rapport à l'année précédente.
+Le problème de délai des servo-moteurs persiste, c'est pourquoi nous sommes passés sur une Raspberry.
   
 
 ## Raspberry 
@@ -27,5 +29,5 @@ Accessible via le lien suivant: https://github.com/TacTac315/PIR_Ball_Balancing
 #### Guide du PIR
 Accessible via le lien suivant: https://docs.google.com/presentation/d/1oQSozAxNd_onhYN5Y_eiVXRHdkCVRMCHHFUxAfs1lPQ/edit?usp=sharing
 
-## Informations techniques carte raspberrypi
+#### Informations techniques carte raspberrypi
 Accessible via le lien suivant : https://www.raspberrypi.com/documentation/computers/raspberry-pi.html

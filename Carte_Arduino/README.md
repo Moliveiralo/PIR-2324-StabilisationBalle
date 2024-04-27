@@ -1,12 +1,22 @@
-## Arduino
+# Ball Balancing System Development on Arduino
+## Required Matlab Version
+This project was developed on Matlab R2020a.
 
-Simulink : Ball_Detection_and_PID.slx  
-Matlab : dataToLookupTable.m et data.mat  
-Arduino : ServoControl.ino  
+## Required Matlab Extensions
 
-Etapes :  
-- Tout mettre dans un même dossier
-- Run dataToLookupTable.m qui va charger data.mat qui contient les angles des servo moteur en fontion de alpha
-- Dans le Simulink :  
-1. Test
+    MATLAB Support Package for USB Webcams
+        Download Link
 
+    Image Acquisition Toolbox Support Package for OS Generic Video Interface
+        Download Link
+
+    Instrument Control Toolbox
+        Instrument Control Toolbox
+
+## How to Use
+Before launching the main program Ball_Detection_and_PID.slx, follow these steps:
+1. Read the comments in the blue blocks of Ball_Detection_and_PID.slx for program execution instructions.
+2. Set up the camera appropriately.
+3. Set up the COM port.
+4. Run dataToLookupTable.m
+- It will charge data.mat which contains the values of angles for the servo motors

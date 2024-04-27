@@ -4,9 +4,9 @@ OLIVEIRA LOPES Maxime - NAJI Inès - COUSTON Emma - BIGOT Timothé - BEGHIN Léa
 ![20240202_145909 (1)](https://github.com/Moliveiralo/PIR-2324-StabilisationBalle/assets/133717115/8f52fa8f-02b0-4ea9-83f4-4813ad36bbab)
 
 ## Arduino 
-Projet initial sous Arduino avec Simulink et Matlab.
-Des corrections ont été faites sur simulink et matlab par rapport à l'année précédente.
-Le problème de délai des servo-moteurs persiste, c'est pourquoi nous sommes passés sur une Raspberry, afin de centraliser toutes les informations : le code matlab tourne sur la raspberry et la caméra est directement branchée à la raspberry. 
+Projet initial sous Arduino avec Simulink et Matlab.  
+Des corrections ont été faites sur simulink et matlab par rapport à l'année précédente.  
+Le problème de délai des servo-moteurs persiste, c'est pourquoi nous sommes passés sur une Raspberry, afin de centraliser toutes les informations : le code matlab tourne sur la raspberry et la caméra est directement branchée à la raspberry.   
 
 ## Raspberry 
   #### Matlab

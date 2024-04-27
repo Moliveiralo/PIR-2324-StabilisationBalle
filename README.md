@@ -4,18 +4,19 @@ OLIVEIRA LOPES Maxime - NAJI Inès - COUSTON Emma - BIGOT Timothé - BEGHIN Léa
 ![20240202_145909 (1)](https://github.com/Moliveiralo/PIR-2324-StabilisationBalle/assets/133717115/8f52fa8f-02b0-4ea9-83f4-4813ad36bbab)
 
 ## Arduino 
-Projet initial sous Arduino avec Simulink et Matlab.  
-Des corrections ont été faites sur simulink et matlab par rapport à l'année précédente.  
-Le problème de délai des servo-moteurs persiste, c'est pourquoi nous sommes passés sur une Raspberry, afin de centraliser toutes les informations : le code matlab tourne sur la raspberry et la caméra est directement branchée à la raspberry.   
+Initial project on Arduino with Simulink and Matlab.  
+Corrections have been made to simulink and matlab compared with the [previous year](https://github.com/TacTac315/PIR_Ball_Balancing).    
+The servo-motor delay problem persisted, so we switched to a Raspberry to centralize all the information: the matlab code runs on the raspberry and the camera is connected directly to the raspberry.
+Raspberry  
 
 ## Raspberry
-Transposition du projet initial sur Raspberry pi 4  
+Transposition of the initial project to Raspberry pi 4  
 2 versions :  
-- Matlab 
+- Matlab
 - Python
 
 ## Simulations
-Simulations afin de trouver un PID optimal 
+Simulations to find an optimal PID
  
 ## Liens suivi de projet
 #### Trello

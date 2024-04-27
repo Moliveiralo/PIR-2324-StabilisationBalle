@@ -8,5 +8,5 @@ Etapes :
 - Tout mettre dans un même dossier
 - Run dataToLookupTable.m qui va charger data.mat qui contient les angles des servo moteur en fontion de alpha
 - Dans le Simulink :
-  -  
+--Test
 

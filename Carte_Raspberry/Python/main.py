@@ -1,20 +1,23 @@
-###########################################################
-#                                                         #
-#                 Stabilisation de balle                  #
-#                                                         #
-#            Auteurs : OLIVEIRA LOPES Maxime              #
-#            NAJI Inès                                    #
-#            COUSTON Emma                                 #
-#            BIGOT Timothé                                #
-#            VORMS Lucie                                  #
-#            BEGHIN Léa                                   #
-#                                                         #
-#            Date de création: 27/04/2024                 #
-#                                                         #
-#            Description :                                #
-#            - Description brève du projet                #
-#                                                         #
-###########################################################
+##################################################################
+#                                                                #
+#                    Stabilisation de balle                      #
+#                                                                #
+#               Auteurs : OLIVEIRA LOPES Maxime                  #
+#               NAJI Inès                                        #
+#               COUSTON Emma                                     #
+#               BIGOT Timothé                                    #
+#               VORMS Lucie                                      #
+#               BEGHIN Léa                                       #
+#                                                                #
+#               Date de création: 27/04/2024                     #
+#                                                                #
+#               Description :                                    #
+#               - Description brève du projet                    #
+#                                                                #
+##################################################################
+
+# Pour pouvoir run le code depuis Pycharm sur un ordinateur windows sur le raspberry:
+# https://medium.com/@sadeepari/access-raspberry-pi-with-ssh-in-pycharm-848df6d31e8a#:~:text=To%20execute%20code%20on%20your,displayed%20in%20the%20PyCharm%20console.
 
 
 # -------------------------------------------------------------- #

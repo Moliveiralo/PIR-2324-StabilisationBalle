@@ -45,6 +45,8 @@ lines = lines[1:] # Retrait des en-têtes situés à la première ligne du fichi
 
 # Assignation des pins pour les servomoteurs et définition de la fréquence des PWM
 servo0 = 13
+servo1 = 26
+servo2 = 19
 pwmFrequency = 200
 
 # Configuration des GPIO
@@ -55,7 +57,7 @@ GPIO.setup(servo0, GPIO.OUT)
 GPIO.setup(servo1, GPIO.OUT)
 GPIO.setup(servo2, GPIO.OUT)
 
-# Initialisation des objets PWM pour chaque servo
+# Initialisation des objets PWM pour chaque servo --> pour changer le rapport cyclique: pwm.changeDutyCycle(rapportCyclique)
 pwm0 = GPIO.PWM(servo0, pwmFrequency)
 pwm1 = GPIO.PWM(servo1, pwmFrequency)
 pwm2 = GPIO.PWM(servo2, pwmFrequency)

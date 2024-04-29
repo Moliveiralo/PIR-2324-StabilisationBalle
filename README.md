@@ -1,8 +1,9 @@
 # PIR 2023-2024 | Stabilisation d'une balle
 OLIVEIRA LOPES Maxime - NAJI Inès - COUSTON Emma - BIGOT Timothé - BEGHIN Léa - VORMS Lucie
+This project is take this source from the project of [Johan Link](https://github.com/JohanLink/Ball-Balancing-PID-System?tab=readme-ov-file)   
 
-![20240202_145909 (1)](https://github.com/Moliveiralo/PIR-2324-StabilisationBalle/assets/133717115/8f52fa8f-02b0-4ea9-83f4-4813ad36bbab)
-This project is take this source from the project of [Johan Link](https://github.com/JohanLink/Ball-Balancing-PID-System?tab=readme-ov-file) 
+![20240202_145909 (1)](https://github.com/Moliveiralo/PIR-2324-StabilisationBalle/assets/133717115/8f52fa8f-02b0-4ea9-83f4-4813ad36bbab)  
+
 
 ## Arduino 
 Initial project on Arduino with Simulink and Matlab.  

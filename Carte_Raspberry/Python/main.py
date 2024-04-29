@@ -8,7 +8,9 @@
 #            BIGOT Timothé                                #
 #            VORMS Lucie                                  #
 #            BEGHIN Léa                                   #
+#                                                         #
 #            Date de création: 27/04/2024                 #
+#                                                         #
 #            Description :                                #
 #            - Description brève du projet                #
 #                                                         #
@@ -20,11 +22,48 @@
 # -------------------------------------------------------------- #
 
 import io  # Pour gérer les flux d'octets en mémoire -- Documentation : https://docs.python.org/3/library/io.html
-from picamera import PiCamera  # Pour utiliser la caméra Raspberry Pi -- Documentation : https://picamera.readthedocs.io/en/release-1.13/
+import picamera as cam  # Pour utiliser la caméra Raspberry Pi -- Documentation : https://picamera.readthedocs.io/en/release-1.13/
 import time as t  # Pour introduire des délais -- Documentation : https://docs.python.org/fr/3/library/time.html
-import PiGPIO as gpio # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : https://github.com/joan2937/pigpio
+import RPi.GPIO as GPIO # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : http://sourceforge.net/p/raspberry-gpio-python/wiki/Home/
 # Si jamais on veut, pour implémenter une interface homme-machine via la raspi: https://wiki.python.org/moin/PyQt
 
+
+# -------------------------------------------------------------- #
+##### ---------- LECTURE DE LA MATRICE DE DONNEES ---------- #####
+# -------------------------------------------------------------- #
+
+lines = open("./data.txt").read().splitlines() # Ouverture du fichier et récupération du tableau des lignes
+lines = lines[1:] # Retrait des en-têtes situés à la première ligne du fichier (alpha,beta,AngleservoA,AngleservoB,AngleservoC)
+
+
+# -------------------------------------------------------------- #
+##### --------------- CONFIGURATION DES PINS --------------- #####
+# -------------------------------------------------------------- #
+# Datasheet du Raspberry avec pin layout: https://datasheets.raspberrypi.com/rpi4/raspberry-pi-4-datasheet.pdf
+# Note: Le Raspberry Pi 4 Model B ne dispose que de deux PWM hardware. Nous utiliserons la librairie RPi.GPIO
+# pour en créer une de manière logicielle
+
+# Assignation des pins pour les servomoteurs et définition de la fréquence des PWM
+servo0 = 13
+pwmFrequency = 200
+
+# Configuration des GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+
+GPIO.setup(servo0, GPIO.OUT)
+GPIO.setup(servo1, GPIO.OUT)
+GPIO.setup(servo2, GPIO.OUT)
+
+# Initialisation des objets PWM pour chaque servo
+pwm0 = GPIO.PWM(servo0, pwmFrequency)
+pwm1 = GPIO.PWM(servo1, pwmFrequency)
+pwm2 = GPIO.PWM(servo2, pwmFrequency)
+
+# Démarrage des signaux PWM
+pwm0.start(0)
+pwm1.start(0)
+pwm2.start(0)
 
 # -------------------------------------------------------------- #
 ##### --------------- ACQUISITION DE L'IMAGE --------------- #####
@@ -34,7 +73,7 @@ import PiGPIO as gpio # Librairie pour gérer les GPIO du Raspberry Pi -- Docume
 stream = io.BytesIO()
 
 # Instanciation de l'objet caméra
-camera = PiCamera()
+camera = cam.PiCamera()
 camera.resolution = (640, 480)  # Définition de la résolution de la caméra
 
 # Activation de l'aperçu pour visualiser ce que la caméra capte

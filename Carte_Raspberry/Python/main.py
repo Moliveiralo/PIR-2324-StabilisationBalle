@@ -48,7 +48,7 @@ lines = lines[1:] # Retrait des en-têtes situés à la première ligne du fichi
 # On parcourt l'intégralité des lignes du fichier data.txt
 for i in range(0, len(lines)):
     # On sépare les valeurs de chaque ligne en une liste
-    values = line.strip().split(',')
+    values = lines[i].strip().split(',')
 
     # Ajout des données dans le dictionnaire sous le format suivant:
     # data[alpha,beta]=(angleServoA, angleServoB, angleServoC)

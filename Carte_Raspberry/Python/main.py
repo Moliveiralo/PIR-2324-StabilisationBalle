@@ -2,8 +2,7 @@
 #                                                                #
 #                    Stabilisation de balle                      #
 #                                                                #
-#               Auteurs :                                        #
-#               OLIVEIRA LOPES Maxime                            #
+#               Auteurs : OLIVEIRA LOPES Maxime                  #
 #               NAJI Inès                                        #
 #               COUSTON Emma                                     #
 #               BIGOT Timothé                                    #
@@ -13,7 +12,7 @@
 #               Date de création: 27/04/2024                     #
 #                                                                #
 #               Description :                                    #
-#               Description brève du projet                      #
+#               - Description brève du projet                    #
 #                                                                #
 ##################################################################
 
@@ -26,11 +25,15 @@
 # -------------------------------------------------------------- #
 
 import io  # Pour gérer les flux d'octets en mémoire -- Documentation : https://docs.python.org/3/library/io.html
-import picamera as cam  # Pour utiliser la caméra Raspberry Pi -- Documentation : https://picamera.readthedocs.io/en/release-1.13/
+import \
+    picamera as cam  # Pour utiliser la caméra Raspberry Pi -- Documentation : https://picamera.readthedocs.io/en/release-1.13/
 import time as t  # Pour introduire des délais -- Documentation : https://docs.python.org/fr/3/library/time.html
-import RPi.GPIO as GPIO # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : http://sourceforge.net/p/raspberry-gpio-python/wiki/Ho
-import cv2 as cv #Librairie pour l'acquisition d'image avec la caméra --Documentation : https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
-#Documentation vidéo OpenCV : https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html
+import \
+    RPi.GPIO as GPIO  # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : http://sourceforge.net/p/raspberry-gpio-python/wiki/Ho
+import \
+    cv2 as cv  # Librairie pour l'acquisition d'image avec la caméra --Documentation : https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
+
+# Documentation vidéo OpenCV : https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html
 
 # Si jamais on veut, pour implémenter une interface homme-machine via la raspi: https://wiki.python.org/moin/PyQt
 
@@ -39,20 +42,9 @@ import cv2 as cv #Librairie pour l'acquisition d'image avec la caméra --Documen
 ##### ---------- LECTURE DE LA MATRICE DE DONNEES ---------- #####
 # -------------------------------------------------------------- #
 
-# Initialisation du dictionnaire de données
-data = {}
-
-lines = open("./data.txt").read().splitlines() # Ouverture du fichier et récupération du tableau des lignes
-lines = lines[1:] # Retrait des en-têtes situés à la première ligne du fichier (alpha,beta,AngleservoA,AngleservoB,AngleservoC)
-
-# On parcourt l'intégralité des lignes du fichier data.txt
-for i in range(0, len(lines)):
-    # On sépare les valeurs de chaque ligne en une liste
-    values = lines[i].strip().split(',')
-
-    # Ajout des données dans le dictionnaire sous le format suivant:
-    # data[alpha,beta]=(angleServoA, angleServoB, angleServoC)
-    data[float(values[0]),float(values[1])]=(float(values[2]),float(values[3]),float(values[4]))
+lines = open("./data.txt").read().splitlines()  # Ouverture du fichier et récupération du tableau des lignes
+lines = lines[
+        1:]  # Retrait des en-têtes situés à la première ligne du fichier (alpha,beta,AngleservoA,AngleservoB,AngleservoC)
 
 # -------------------------------------------------------------- #
 ##### --------------- CONFIGURATION DES PINS --------------- #####
@@ -88,10 +80,11 @@ pwm2.start(0)
 # -------------------------------------------------------------- #
 ##### --------------- ACQUISITION DE L'IMAGE --------------- #####
 # -------------------------------------------------------------- #
-#Démarrer la prise de vidéo
+# Démarrer la prise de vidéo
 cap = cv.VideoCapture(0)
 
-#Trouver le centre de la balle
+
+# Trouver le centre de la balle
 def DetectOrangeBall():
     if not cap.isOpened():
         print("Cannot open camera")
@@ -104,14 +97,17 @@ def DetectOrangeBall():
         # if frame is read correctly ret is True
         if not ret:
             print("Can't receive frame (stream end?). Exiting ...")
-        break
+            break
         else:
-            #Recadrer l'image
-            #frame = frame[:, 93:550, :]
-            # Our operations on the frame come here
-            #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+        # Recadrer l'image
+        # frame = frame[:, 93:550, :]
+        # Our operations on the frame come here
+        # gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
 
+# -------------------------------------------------------------- #
+##### ----------- PID + POSITION TO PLATE ANGLE ------------ #####
+# -------------------------------------------------------------- #
 
 
 ##Les sliders du code de JohanLink servent à modifier sur une interface les coefs du PID, possibilité de l'implémenter plus tard mais c'est pas la priorité
@@ -121,26 +117,25 @@ def PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yc
     Ki = 0
     Kd = 0
 
-    S_erreurX += Xconsigne - X_ball # Mise à jour de la somme de l'erreur selon l'axe X
-    S_erreurY += Yconsigne - Y_ball # Mise à jour de la somme de l'erreur selon l'axe Y
+    S_erreurX += Xconsigne - X_ball  # Mise à jour de la somme de l'erreur selon l'axe X
+    S_erreurY += Yconsigne - Y_ball  # Mise à jour de la somme de l'erreur selon l'axe Y
 
-    Ix=Kp*(Xconsigne - X_ball) + Ki*S_erreurX + Kd*((Xball_precedente - X_ball)/0.0333)
-    Iy=Kp*(Yconsigne - Y_ball) + Ki*S_erreurY + Kd*((Yball_precedente - Y_ball)/0.0333)
+    Ix = Kp * (Xconsigne - X_ball) + Ki * S_erreurX + Kd * ((Xball_precedente - X_ball) / 0.0333)
+    Iy = Kp * (Yconsigne - Y_ball) + Ki * S_erreurY + Kd * ((Yball_precedente - Y_ball) / 0.0333)
 
     Ix = round(Ix / 10000, 4)
     Iy = round(Iy / 10000, 4)
 
-    gamma = degrees(atan(Iy/Ix))
+    gamma = degrees(atan(Iy / Ix))
 
     if Ix == 0 and Iy == 0:
         alpha_query = 0
         beta_query = 0
-
     elif Ix > 0 and Iy >= 0:
         beta_query = 180 - abs(gamma)
     elif Ix > 0 and Iy <= 0:
         beta_query = 180 + abs(gamma)
-    elif Ix< 0 and Iy >= 0:
+    elif Ix < 0 and Iy >= 0:
         beta_query = abs(gamma)
     elif Ix < 0 and Iy <= 0:
         beta_query = 360 - abs(gamma)
@@ -149,16 +144,34 @@ def PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yc
     else:
         beta_query = 270
 
-    if sqrt(Ix**2 + Iy**2) > 1:
+    if sqrt(Ix ** 2 + Iy ** 2) > 1:
         alpha_query = 35
     else:
-        alpha_query = degrees(asin(sqrt(Ix**2 + Iy**2)))
-
+        alpha_query = degrees(asin(sqrt(Ix ** 2 + Iy ** 2)))
 
     ## Saturation d'alpha
     if alpha_query > 35:
         alpha_query = 35
-        
+
+
+# -------------------------------------------------------------- #
+##### ---------------  UPDATING THE ACTUATORS -------------- #####
+# -------------------------------------------------------------- #
+
+def move_motors(AngleServo1, AngleServo2, AngleServo3):
+    a = 5.406
+    b = -48.65
+
+    alpha0 = (AngleServo2 - b)/(a*100)
+    alpha1 = (AngleServo3 - b)/(a*100)
+    alpha2 = (AngleServo1 - b)/(a*100)
+
+    pwm1.changeDutyCycle(alpha0)
+    pwm2.changeDutyCycle(alpha1)
+    pwm3.changeDutyCycle(alpha2)
+
+
+
 
 
 

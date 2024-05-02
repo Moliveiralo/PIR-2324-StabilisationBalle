@@ -27,7 +27,10 @@
 import io  # Pour gérer les flux d'octets en mémoire -- Documentation : https://docs.python.org/3/library/io.html
 import picamera as cam  # Pour utiliser la caméra Raspberry Pi -- Documentation : https://picamera.readthedocs.io/en/release-1.13/
 import time as t  # Pour introduire des délais -- Documentation : https://docs.python.org/fr/3/library/time.html
-import RPi.GPIO as GPIO # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : http://sourceforge.net/p/raspberry-gpio-python/wiki/Home/
+import RPi.GPIO as GPIO # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : http://sourceforge.net/p/raspberry-gpio-python/wiki/Ho
+import cv2 as cv #Librairie pour l'acquisition d'image avec la caméra --Documentation : https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
+#Documentation vidéo OpenCV : https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html
+
 # Si jamais on veut, pour implémenter une interface homme-machine via la raspi: https://wiki.python.org/moin/PyQt
 
 
@@ -73,23 +76,28 @@ pwm2.start(0)
 # -------------------------------------------------------------- #
 ##### --------------- ACQUISITION DE L'IMAGE --------------- #####
 # -------------------------------------------------------------- #
+#Démarrer la prise de vidéo
+cap = cv.VideoCapture(0)
 
-# Initialisation d'un flux pour stocker la vidéo en mémoire
-stream = io.BytesIO()
+#Trouver le centre de la balle
+def DetectOrangeBall():
+    if not cap.isOpened():
+        print("Cannot open camera")
+        exit()
 
-# Instanciation de l'objet caméra
-camera = cam.PiCamera()
-camera.resolution = (640, 480)  # Définition de la résolution de la caméra
+    while True:
+        # Capture frame-by-frame
+        ret, frame = cap.read()
 
-# Activation de l'aperçu pour visualiser ce que la caméra capte
-camera.start_preview()
-
-# Démarrage de l'enregistrement vidéo
-camera.start_recording(stream, format='h264', quality=23)  # Format h264 avec une qualité de 23
-camera.wait_recording(15)  # Enregistrement pendant 15 secondes
-camera.stop_recording()  # Arrêt de l'enregistrement
-t.sleep(5)  # Pause de 5 secondes
-camera.stop_preview()  # Fermeture de l'aperçu
+        # if frame is read correctly ret is True
+        if not ret:
+            print("Can't receive frame (stream end?). Exiting ...")
+        break
+        else:
+            #Recadrer l'image
+            #frame = frame[:, 93:550, :]
+            # Our operations on the frame come here
+            #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
 
 

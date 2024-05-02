@@ -39,11 +39,27 @@ import cv2 as cv #Librairie pour l'acquisition d'image avec la caméra --Documen
 ##### ---------- LECTURE DE LA MATRICE DE DONNEES ---------- #####
 # -------------------------------------------------------------- #
 
+# Initialisation des listes de données
+alpha = []
+beta = []
+AngleservoA = []
+AngleservoB = []
+AngleservoC = []
+
 lines = open("./data.txt").read().splitlines() # Ouverture du fichier et récupération du tableau des lignes
 lines = lines[1:] # Retrait des en-têtes situés à la première ligne du fichier (alpha,beta,AngleservoA,AngleservoB,AngleservoC)
 
+# On parcourt l'intégralité des lignes du fichier data.txt
 for i in range(len(lines)):
+    # On sépare les valeurs de chaque ligne en une liste
+    values = line.strip().split(',')
 
+    # On ajoute chaque valeur dans la liste correspondante
+    alpha.append(float(values[0]))
+    beta.append(float(values[1]))
+    AngleservoA.append(float(values[2]))
+    AngleservoB.append(float(values[3]))
+    AngleservoC.append(float(values[4]))
 
 # -------------------------------------------------------------- #
 ##### --------------- CONFIGURATION DES PINS --------------- #####

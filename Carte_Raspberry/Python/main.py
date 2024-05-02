@@ -113,21 +113,27 @@ def DetectOrangeBall():
 ##Les sliders du code de JohanLink servent à modifier sur une interface les coefs du PID, possibilité de l'implémenter plus tard mais c'est pas la priorité
 def PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yconsigne):
     # C(s) = Kp * e(s) + Ki/s * e(s) + Kd * s * e(s) --> Kp, Ki et Kd sont les coefficients du PID, que l'on peut ajuster
+
+    #definition des coefs du PID
     Kp = 1
     Ki = 0
     Kd = 0
 
+    #Somme des erreurs qui ont eu lieu depuis l'allumage du systeme
     S_erreurX += Xconsigne - X_ball  # Mise à jour de la somme de l'erreur selon l'axe X
     S_erreurY += Yconsigne - Y_ball  # Mise à jour de la somme de l'erreur selon l'axe Y
 
+    #Equation des PID
     Ix = Kp * (Xconsigne - X_ball) + Ki * S_erreurX + Kd * ((Xball_precedente - X_ball) / 0.0333)
     Iy = Kp * (Yconsigne - Y_ball) + Ki * S_erreurY + Kd * ((Yball_precedente - Y_ball) / 0.0333)
 
+    #A verifier si c'est utile, Johan Link le fait
     Ix = round(Ix / 10000, 4)
     Iy = round(Iy / 10000, 4)
 
     gamma = degrees(atan(Iy / Ix))
 
+    #Détermine le alpha et le beta que l'on souhaire en fonction de Ix et Iy
     if Ix == 0 and Iy == 0:
         alpha_query = 0
         beta_query = 0
@@ -153,27 +159,24 @@ def PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yc
     if alpha_query > 35:
         alpha_query = 35
 
+    return alpha_query, beta_query
+
 
 # -------------------------------------------------------------- #
 ##### ---------------  UPDATING THE ACTUATORS -------------- #####
 # -------------------------------------------------------------- #
 
+#Permet d'actualiser la valeur des servomoteurs en fonction des angles trouvés dans data.txt
 def move_motors(AngleServo1, AngleServo2, AngleServo3):
     a = 5.406
     b = -48.65
 
+    #Angleservo = a * %PWM - b
     alpha0 = (AngleServo2 - b)/(a*100)
     alpha1 = (AngleServo3 - b)/(a*100)
     alpha2 = (AngleServo1 - b)/(a*100)
 
+    #Connfiguration du duty cycle sur les PWM
     pwm1.changeDutyCycle(alpha0)
     pwm2.changeDutyCycle(alpha1)
     pwm3.changeDutyCycle(alpha2)
-
-
-
-
-
-
-
-

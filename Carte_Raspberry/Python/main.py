@@ -30,6 +30,9 @@ import time as t  # Pour introduire des délais -- Documentation : https://docs.
 import RPi.GPIO as GPIO # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : http://sourceforge.net/p/raspberry-gpio-python/wiki/Ho
 import cv2 as cv #Librairie pour l'acquisition d'image avec la caméra --Documentation : https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
 #Documentation vidéo OpenCV : https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html
+#Documentation retouche image OpenCV : https://docs.opencv.org/3.4/df/d9d/tutorial_py_colorspaces.html
+#Documentation contour OpenCV : https://docs.opencv.org/3.4/d4/d73/tutorial_py_contours_begin.html
+import numpy as np #Librairie pour .....
 
 # Si jamais on veut, pour implémenter une interface homme-machine via la raspi: https://wiki.python.org/moin/PyQt
 
@@ -85,7 +88,6 @@ def DetectOrangeBall():
         print("Cannot open camera")
         exit()
 
-    while True:
         # Capture frame-by-frame
         ret, frame = cap.read()
 
@@ -97,9 +99,41 @@ def DetectOrangeBall():
             #Recadrer l'image
             #frame = frame[:, 93:550, :]
             # Our operations on the frame come here
-            #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+            #Convert the frame to HSV color space
+            hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
 
+            #define range of orange color in HSV
+            lower_orange = np.array([5,40,50])
+            upper_orange = np.array([15,100,100])
 
+            # Threshold the HSV image to get only blue colors
+            mask = cv.inRange(hsv, lower_orange, upper_orange)
+            #Ajoute du flou
+            mask = cv.blur(mask,(6,6))
+            #Retire les parasites
+            mask = cv.erode(mask, None, iterations=2)
+            mask = cv.dilate(mask, None, iterations=2)
+
+            #Trouver le contour de la balle
+            contours = cv.findContours(mask.copy(), cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+            for cnt in contours:
+                #Calcul l'air a partir du contour
+                ballArea = cv.contourArea(cnt)
+                #Verifier que l'objet trouvé est suffisement grand
+                #Pour être sûr que c'est la balle que nous avons detecté
+                if ballArea > 1500:
+                    # We find the circumcircle.
+                    # It is a circle which completely covers the object with minimum area.
+                    (x,y), radius = cv.minEnclosingCircle(cnt)
+                    #(x,y) est le centre du cercle
+                    ballX = int(x)
+                    # In images, y=0 is on top, not on the bottom
+                    ballY = 480 - int(y)
+                    radius = int(radius)
+                    #Vérification
+                    if radius > 20:
+                        result = (ballX,ballY)
+    return(result)
 
 
 ##Les sliders du code de JohanLink servent à modifier sur une interface les coefs du PID, possibilité de l'implémenter plus tard mais c'est pas la priorité

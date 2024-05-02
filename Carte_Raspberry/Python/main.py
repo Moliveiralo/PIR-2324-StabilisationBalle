@@ -42,13 +42,6 @@ import cv2 as cv #Librairie pour l'acquisition d'image avec la caméra --Documen
 # Initialisation du dictionnaire de données
 data = {}
 
-# Initialisation des listes de données
-alpha = []
-beta = []
-AngleservoA = []
-AngleservoB = []
-AngleservoC = []
-
 lines = open("./data.txt").read().splitlines() # Ouverture du fichier et récupération du tableau des lignes
 lines = lines[1:] # Retrait des en-têtes situés à la première ligne du fichier (alpha,beta,AngleservoA,AngleservoB,AngleservoC)
 

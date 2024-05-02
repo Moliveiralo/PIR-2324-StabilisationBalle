@@ -2,7 +2,8 @@
 #                                                                #
 #                    Stabilisation de balle                      #
 #                                                                #
-#               Auteurs : OLIVEIRA LOPES Maxime                  #
+#               Auteurs :                                        #
+#               OLIVEIRA LOPES Maxime                            #
 #               NAJI Inès                                        #
 #               COUSTON Emma                                     #
 #               BIGOT Timothé                                    #
@@ -12,7 +13,7 @@
 #               Date de création: 27/04/2024                     #
 #                                                                #
 #               Description :                                    #
-#               - Description brève du projet                    #
+#               Description brève du projet                      #
 #                                                                #
 ##################################################################
 
@@ -40,6 +41,8 @@ import cv2 as cv #Librairie pour l'acquisition d'image avec la caméra --Documen
 
 lines = open("./data.txt").read().splitlines() # Ouverture du fichier et récupération du tableau des lignes
 lines = lines[1:] # Retrait des en-têtes situés à la première ligne du fichier (alpha,beta,AngleservoA,AngleservoB,AngleservoC)
+
+for i in range(len(lines)):
 
 
 # -------------------------------------------------------------- #

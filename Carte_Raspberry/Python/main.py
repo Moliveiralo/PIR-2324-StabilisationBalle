@@ -27,12 +27,14 @@
 import io  # Pour gérer les flux d'octets en mémoire -- Documentation : https://docs.python.org/3/library/io.html
 import picamera as cam  # Pour utiliser la caméra Raspberry Pi -- Documentation : https://picamera.readthedocs.io/en/release-1.13/
 import time as t  # Pour introduire des délais -- Documentation : https://docs.python.org/fr/3/library/time.html
-import RPi.GPIO as GPIO # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : http://sourceforge.net/p/raspberry-gpio-python/wiki/Ho
-import cv2 as cv #Librairie pour l'acquisition d'image avec la caméra --Documentation : https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
-#Documentation vidéo OpenCV : https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html
-#Documentation retouche image OpenCV : https://docs.opencv.org/3.4/df/d9d/tutorial_py_colorspaces.html
-#Documentation contour OpenCV : https://docs.opencv.org/3.4/d4/d73/tutorial_py_contours_begin.html
-import numpy as np #Librairie pour .....
+import RPi.GPIO as GPIO   # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : http://sourceforge.net/p/raspberry-gpio-python/wiki/Ho
+import cv2 as cv   # Librairie pour l'acquisition d'image avec la caméra --Documentation : https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
+# Documentation vidéo OpenCV : https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html
+# Documentation retouche image OpenCV : https://docs.opencv.org/3.4/df/d9d/tutorial_py_colorspaces.html
+# Documentation contour OpenCV : https://docs.opencv.org/3.4/d4/d73/tutorial_py_contours_begin.html
+import numpy as np  # Librairie pour .....
+import math as m
+
 
 # Si jamais on veut, pour implémenter une interface homme-machine via la raspi: https://wiki.python.org/moin/PyQt
 
@@ -41,8 +43,8 @@ import numpy as np #Librairie pour .....
 ##### ---------- LECTURE DE LA MATRICE DE DONNEES ---------- #####
 # -------------------------------------------------------------- #
 
-lines = open("./data.txt").read().splitlines() # Ouverture du fichier et récupération du tableau des lignes
-lines = lines[1:] # Retrait des en-têtes situés à la première ligne du fichier (alpha,beta,AngleservoA,AngleservoB,AngleservoC)
+lines = open("./data.txt").read().splitlines()  # Ouverture du fichier et récupération du tableau des lignes
+lines = lines[1:]  # Retrait des en-têtes situés à la première ligne du fichier (alpha,beta,AngleservoA,AngleservoB,AngleservoC)
 
 
 # -------------------------------------------------------------- #
@@ -76,83 +78,85 @@ pwm0.start(0)
 pwm1.start(0)
 pwm2.start(0)
 
+
 # -------------------------------------------------------------- #
 ##### --------------- ACQUISITION DE L'IMAGE --------------- #####
 # -------------------------------------------------------------- #
-#Démarrer la prise de vidéo
+# Démarrer la prise de vidéo
 cap = cv.VideoCapture(0)
 
-#Trouver le centre de la balle
+# Trouver le centre de la balle
 def DetectOrangeBall():
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
 
-        # Capture frame-by-frame
-        ret, frame = cap.read()
+    # Capture frame-by-frame
+    ret, frame = cap.read()
 
-        # if frame is read correctly ret is True
-        if not ret:
-            print("Can't receive frame (stream end?). Exiting ...")
-        break
-        else:
-            #Recadrer l'image
-            #frame = frame[:, 93:550, :]
-            # Our operations on the frame come here
-            #Convert the frame to HSV color space
-            hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+    # if frame is read correctly ret is True
+    if not ret:
+        print("Can't receive frame (stream end?). Exiting ...")
+    else:
+        # Recadrer l'image
+        # frame = frame[:, 93:550, :]
+        # Our operations on the frame come here
+        # Convert the frame to HSV color space
+        hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
 
-            #define range of orange color in HSV
-            lower_orange = np.array([5,40,50])
-            upper_orange = np.array([15,100,100])
+        # define range of orange color in HSV
+        lower_orange = np.array([5, 40, 50])
+        upper_orange = np.array([15, 100, 100])
 
-            # Threshold the HSV image to get only blue colors
-            mask = cv.inRange(hsv, lower_orange, upper_orange)
-            #Ajoute du flou
-            mask = cv.blur(mask,(6,6))
-            #Retire les parasites
-            mask = cv.erode(mask, None, iterations=2)
-            mask = cv.dilate(mask, None, iterations=2)
+        # Threshold the HSV image to get only blue colors
+        mask = cv.inRange(hsv, lower_orange, upper_orange)
+        # Ajoute du flou
+        mask = cv.blur(mask, (6, 6))
+        # Retire les parasites
+        mask = cv.erode(mask, None, iterations=2)
+        mask = cv.dilate(mask, None, iterations=2)
 
-            #Trouver le contour de la balle
-            contours = cv.findContours(mask.copy(), cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-            for cnt in contours:
-                #Calcul l'air a partir du contour
-                ballArea = cv.contourArea(cnt)
-                #Verifier que l'objet trouvé est suffisement grand
-                #Pour être sûr que c'est la balle que nous avons detecté
-                if ballArea > 1500:
-                    # We find the circumcircle.
-                    # It is a circle which completely covers the object with minimum area.
-                    (x,y), radius = cv.minEnclosingCircle(cnt)
-                    #(x,y) est le centre du cercle
-                    ballX = int(x)
-                    # In images, y=0 is on top, not on the bottom
-                    ballY = 480 - int(y)
-                    radius = int(radius)
-                    #Vérification
-                    if radius > 20:
-                        result = (ballX,ballY)
-    return(result)
+        # Trouver le contour de la balle
+        contours = cv.findContours(mask.copy(), cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        for cnt in contours:
+            # Calcul l'air a partir du contour
+            ballArea = cv.contourArea(cnt)
+            # Verifier que l'objet trouvé est suffisement grand
+            # Pour être sûr que c'est la balle que nous avons detecté
+            if ballArea > 1500:
+                # We find the circumcircle.
+                # It is a circle which completely covers the object with minimum area.
+                (x, y), radius = cv.minEnclosingCircle(cnt)
+                # (x, y) est le centre du cercle
+                ballX = int(x)
+                # In images, y=0 is on top, not on the bottom
+                ballY = 480 - int(y)
+                radius = int(radius)
+                # Vérification
+                if radius > 20:
+                    result = (ballX, ballY)
+                    return result
 
 
-##Les sliders du code de JohanLink servent à modifier sur une interface les coefs du PID, possibilité de l'implémenter plus tard mais c'est pas la priorité
+# Les sliders du code de JohanLink servent à modifier sur une interface les coefs du PID, possibilité de l'implémenter plus tard mais c'est pas la priorité
 def PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yconsigne):
+    global S_erreurX, S_erreurY
+
     # C(s) = Kp * e(s) + Ki/s * e(s) + Kd * s * e(s) --> Kp, Ki et Kd sont les coefficients du PID, que l'on peut ajuster
     Kp = 1
     Ki = 0
     Kd = 0
 
-    S_erreurX += Xconsigne - X_ball # Mise à jour de la somme de l'erreur selon l'axe X
-    S_erreurY += Yconsigne - Y_ball # Mise à jour de la somme de l'erreur selon l'axe Y
+    S_erreurX += Xconsigne - X_ball  # Mise à jour de la somme de l'erreur selon l'axe X
+    S_erreurY += Yconsigne - Y_ball  # Mise à jour de la somme de l'erreur selon l'axe Y
 
-    Ix=Kp*(Xconsigne - X_ball) + Ki*S_erreurX + Kd*((Xball_precedente - X_ball)/0.0333)
-    Iy=Kp*(Yconsigne - Y_ball) + Ki*S_erreurY + Kd*((Yball_precedente - Y_ball)/0.0333)
+    Ix = Kp*(Xconsigne - X_ball) + Ki*S_erreurX + Kd*((Xball_precedente - X_ball)/0.0333)
+    Iy = Kp*(Yconsigne - Y_ball) + Ki*S_erreurY + Kd*((Yball_precedente - Y_ball)/0.0333)
 
     Ix = round(Ix / 10000, 4)
     Iy = round(Iy / 10000, 4)
 
-    gamma = degrees(atan(Iy/Ix))
+    gamma = m.degrees(m.atan(Iy/Ix))
 
     if Ix == 0 and Iy == 0:
         alpha_query = 0
@@ -171,15 +175,48 @@ def PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yc
     else:
         beta_query = 270
 
-    if sqrt(Ix**2 + Iy**2) > 1:
+    if m.sqrt(Ix**2 + Iy**2) > 1:
         alpha_query = 35
     else:
-        alpha_query = degrees(asin(sqrt(Ix**2 + Iy**2)))
+        alpha_query = m.degrees(m.asin(m.sqrt(Ix**2 + Iy**2)))
 
 
     ## Saturation d'alpha
     if alpha_query > 35:
         alpha_query = 35
+
+    return alpha_query, beta_query
+
+def main():
+    XCenter = 342.0
+    YCenter = 304.0
+    normX = 1/640
+    normY = -1/640
+    Xball_precedente = 0
+    Yball_precedente = 0
+
+    while(1) :
+        #Detect orange ball
+        X, Y = DetectOrangeBall()
+
+        # Distance to the center normalise
+        X_ball = (X - XCenter)*normX
+        Y_ball = (Y - YCenter)*normY
+
+        # PID Control et Pos to plate angle
+        #PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yconsigne):
+        a_q, b_q = PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, 0, 0)
+
+        Xball_precedente = X_ball
+        Yball_precedente = Y_ball
+        # Search into the lookup table
+
+        # Updating the actuators
+
+
+
+
+
         
 
 

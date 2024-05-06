@@ -91,24 +91,24 @@ pwm2.start(0)
 cap = cv.VideoCapture(0)
 
 #Trouver le centre de la balle
-def DetectOrangeBall():
-    if not cap.isOpened():
-        print("Cannot open camera")
-        exit()
-
-    while True:
-        # Capture frame-by-frame
-        frameRetrieved, frame = cap.read()
-
-        # if frame is read correctly frameRetrieved is True
-        if not frameRetrieved:
-            print("Can't receive frame (stream end?). Exiting ...")
-        break
-        else:
-            #Recadrer l'image
-            #frame = frame[:, 93:550, :]
-            # Our operations on the frame come here
-            #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+# def DetectOrangeBall():
+#     if not cap.isOpened():
+#         print("Cannot open camera")
+#         exit()
+#
+#     while True:
+#         # Capture frame-by-frame
+#         frameRetrieved, frame = cap.read()
+#
+#         # if frame is read correctly frameRetrieved is True
+#         if not frameRetrieved:
+#             print("Can't receive frame (stream end?). Exiting ...")
+#         break
+#         else:
+#             #Recadrer l'image
+#             #frame = frame[:, 93:550, :]
+#             # Our operations on the frame come here
+#             #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
 
 

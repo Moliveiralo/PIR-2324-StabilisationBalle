@@ -79,6 +79,10 @@ pwm0 = GPIO.PWM(servo0, pwmFrequency)
 pwm1 = GPIO.PWM(servo1, pwmFrequency)
 pwm2 = GPIO.PWM(servo2, pwmFrequency)
 
+pwm0.ChangeDutyCycle(50)
+pwm1.ChangeDutyCycle(50)
+pwm2.ChangeDutyCycle(50)
+
 # Démarrage des signaux PWM
 pwm0.start(0)
 pwm1.start(0)

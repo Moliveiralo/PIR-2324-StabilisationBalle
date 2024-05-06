@@ -26,7 +26,6 @@
 # -------------------------------------------------------------- #
 
 import io  # Pour gérer les flux d'octets en mémoire -- Documentation : https://docs.python.org/3/library/io.html
-import picamera as cam  # Pour utiliser la caméra Raspberry Pi -- Documentation : https://picamera.readthedocs.io/en/release-1.13/
 import time as t  # Pour introduire des délais -- Documentation : https://docs.python.org/fr/3/library/time.html
 import RPi.GPIO as GPIO # Librairie pour gérer les GPIO du Raspberry Pi -- Documentation : http://sourceforge.net/p/raspberry-gpio-python/wiki/Ho
 import cv2 as cv #Librairie pour l'acquisition d'image avec la caméra --Documentation : https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html
@@ -99,10 +98,10 @@ def DetectOrangeBall():
 
     while True:
         # Capture frame-by-frame
-        ret, frame = cap.read()
+        frameRetrieved, frame = cap.read()
 
-        # if frame is read correctly ret is True
-        if not ret:
+        # if frame is read correctly frameRetrieved is True
+        if not frameRetrieved:
             print("Can't receive frame (stream end?). Exiting ...")
         break
         else:
@@ -158,9 +157,9 @@ def PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yc
     ## Saturation d'alpha
     if alpha_query > 35:
         alpha_query = 35
-        
 
 
 
 
-
+def searchInLookupTable(alpha, beta):
+    return data[alpha,beta]

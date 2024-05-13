@@ -3,7 +3,7 @@ Code Python
 Pour lancer le code : 
 - Se connnecter au Raspberry en SSH
   1. Lancer un terminal sur l'ordinateur
->> ssh pi@[ip_du_raspberry]
+> ssh pi@[ip_du_raspberry]
 - Envoyer le fichier à lancer à la raspberry
   1. Ouvrir sur windows winSCP
   2. Choisir la connexion FTP

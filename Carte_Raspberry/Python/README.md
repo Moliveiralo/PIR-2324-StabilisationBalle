@@ -6,13 +6,12 @@ Pour lancer le code sur la carte Raspberry Pi il faut :
 - Se connnecter au Raspberry en SSH
   1. Lancer un terminal sur l'ordinateur
   2. Taper la commande : ssh pi@[ip_du_raspberry]
-- Envoyer le fichier à lancer à la raspberry  
+- Envoyer le fichier à lancer à la raspberry
 Avec interface graphique winSCP
   1. Ouvrir sur windows winSCP
   2. Choisir la connexion FTP
   3. Nom d'hote = adresse ip du raspberry
-  4. Mot de passe et Nom d'utilisateur choisi à la configuration de la carte
-     
+  4. Mot de passe et Nom d'utilisateur choisi à la configuration de la carte  
 Sans interface graphique
   1. Ouvrir un autre terminal
   2. Se placer dans le dossier où est situé le fichier à envoyer

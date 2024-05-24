@@ -6,15 +6,16 @@ This project is based on the project of [Johan Link](https://github.com/JohanLin
 
 
 ## Arduino 
-Initial project on Arduino with Simulink and Matlab.  
+Contains the initial project based off an Arduino Board with Simulink and Matlab.  
 Corrections have been made to simulink and matlab compared with the [previous year](https://github.com/TacTac315/PIR_Ball_Balancing).    
+Problem with this solution: the system is too slow, the ball cannot be stabilized. Most likely caused by the fact that all the processing is made on the computer and then the instructions are sent to the Arduino to update the servomotors.
 The servo-motor delay problem persisted, so we switched to a Raspberry to centralize all the information: the matlab code runs on the raspberry and the camera is connected directly to the raspberry.
 Raspberry  
 
 ## Raspberry
-Transposition of the initial project to Raspberry pi 4  
+Transposition of the initial project to a Raspberry pi microcontroller to tackle the issues we experienced on the Arduino board. The raspi's architecture allows all the processing to be made directly on it (image acquisition, analysis, update of the servomotors, ...).
 2 versions :  
-- Matlab
+- Matlab (done remotely via SSH (Ips of the 2 raspis: 
 - Python
 
 ## Simulations

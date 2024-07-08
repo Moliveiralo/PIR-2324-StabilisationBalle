@@ -15,24 +15,14 @@ Raspberry
 ## Raspberry
 Transposition of the initial project to a Raspberry pi microcontroller to tackle the issues we experienced on the Arduino board. The raspi's architecture allows all the processing to be made directly on it (image acquisition, analysis, update of the servomotors, ...).
 2 versions :  
-- Matlab (done remotely via SSH (Ips of the 2 raspis: 
-- Python
+- Matlab (done remotely via SSH (Ips of the 2 raspis: 10.105.1.112 and 10.105.1.44)
+- Python (We had very little time to work on this part, but we merged all the portions of our code together so that you can take it over. Global structure should be the approximately the same as the matlab script so you can get some inspiration in the matlab script).
 
 ## Simulations
 Simulations to find an optimal PID
  
-## Liens suivi de projet
-#### Trello
-Accessible via le lien suivant: https://trello.com/invite/b/O5i0e5QD/ATTIa336ba5bb40d894ab62b6f74e209b60c67E6674F/pir-stabilisation-de-balle-2023-2024
+#### Github from last year
+Available here : https://github.com/TacTac315/PIR_Ball_Balancing
 
-#### Google Drive
-Accessible via le lien suivant: https://drive.google.com/drive/folders/1lspng91aXL2b5Bw1NwQdorwPViMi5FDo?usp=sharing
-
-#### Github de l'an dernier
-Accessible via le lien suivant: https://github.com/TacTac315/PIR_Ball_Balancing
-
-#### Guide du PIR
-Accessible via le lien suivant: https://docs.google.com/presentation/d/1oQSozAxNd_onhYN5Y_eiVXRHdkCVRMCHHFUxAfs1lPQ/edit?usp=sharing
-
-#### Informations techniques carte raspberrypi
-Accessible via le lien suivant : https://www.raspberrypi.com/documentation/computers/raspberry-pi.html
+#### Raspberry documentation
+Available here : https://www.raspberrypi.com/documentation/computers/raspberry-pi.html

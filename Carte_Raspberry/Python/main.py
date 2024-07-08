@@ -13,7 +13,12 @@
 #               Date de création: 27/04/2024                     #
 #                                                                #
 #               Description :                                    #
-#               Description brève du projet                      #
+#               Ebauche de code pour l'asservissement            #
+#               de la raspi via python. Non fonctionnel,         #
+#               nous avons rassemblé dans ce fichier tous        #
+#               morceaux de code que nous avions écrit.          #
+#               Par manque de temps, nous n'avons pas pu         #
+#               terminer ce code.                                #
 #                                                                #
 ##################################################################
 
@@ -252,14 +257,6 @@ def move_motors(AngleServo1, AngleServo2, AngleServo3):
         # Search into the lookup table
 
         # Updating the actuators
-
-
-
-
-
-
-
-
 
 
 

@@ -112,6 +112,7 @@ cap = cv.VideoCapture(0)
     # if frame is read correctly ret is True
     #if not ret:
         #print("Can't receive frame (stream end?). Exiting ...")
+        # break
 #else:
         # Recadrer l'image
         # frame = frame[:, 93:550, :]
@@ -152,36 +153,45 @@ cap = cv.VideoCapture(0)
                     result = (ballX, ballY)
                     return result
 
+# -------------------------------------------------------------- #
+##### ----------- PID + POSITION TO PLATE ANGLE ------------ #####
+# -------------------------------------------------------------- #
+
 
 # Les sliders du code de JohanLink servent à modifier sur une interface les coefs du PID, possibilité de l'implémenter plus tard mais c'est pas la priorité
 def PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yconsigne):
     global S_erreurX, S_erreurY
 
     # C(s) = Kp * e(s) + Ki/s * e(s) + Kd * s * e(s) --> Kp, Ki et Kd sont les coefficients du PID, que l'on peut ajuster
+
+    #definition des coefs du PID
     Kp = 1
     Ki = 0
     Kd = 0
 
+    #Somme des erreurs qui ont eu lieu depuis l'allumage du systeme
     S_erreurX += Xconsigne - X_ball  # Mise à jour de la somme de l'erreur selon l'axe X
     S_erreurY += Yconsigne - Y_ball  # Mise à jour de la somme de l'erreur selon l'axe Y
 
-    Ix = Kp*(Xconsigne - X_ball) + Ki*S_erreurX + Kd*((Xball_precedente - X_ball)/0.0333)
-    Iy = Kp*(Yconsigne - Y_ball) + Ki*S_erreurY + Kd*((Yball_precedente - Y_ball)/0.0333)
+    #Equation des PID
+    Ix = Kp * (Xconsigne - X_ball) + Ki * S_erreurX + Kd * ((Xball_precedente - X_ball) / 0.0333)
+    Iy = Kp * (Yconsigne - Y_ball) + Ki * S_erreurY + Kd * ((Yball_precedente - Y_ball) / 0.0333)
 
+    #A verifier si c'est utile, Johan Link le fait
     Ix = round(Ix / 10000, 4)
     Iy = round(Iy / 10000, 4)
 
-    gamma = m.degrees(m.atan(Iy/Ix))
+    gamma = m.degrees(m.atan(Iy / Ix))
 
+    #Détermine le alpha et le beta que l'on souhaire en fonction de Ix et Iy
     if Ix == 0 and Iy == 0:
         alpha_query = 0
         beta_query = 0
-
     elif Ix > 0 and Iy >= 0:
         beta_query = 180 - abs(gamma)
     elif Ix > 0 and Iy <= 0:
         beta_query = 180 + abs(gamma)
-    elif Ix< 0 and Iy >= 0:
+    elif Ix < 0 and Iy >= 0:
         beta_query = abs(gamma)
     elif Ix < 0 and Iy <= 0:
         beta_query = 360 - abs(gamma)
@@ -190,11 +200,10 @@ def PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yc
     else:
         beta_query = 270
 
-    if m.sqrt(Ix**2 + Iy**2) > 1:
+    if m.sqrt(Ix ** 2 + Iy ** 2) > 1:
         alpha_query = 35
     else:
-        alpha_query = m.degrees(m.asin(m.sqrt(Ix**2 + Iy**2)))
-
+        alpha_query = m.degrees(m.asin(m.sqrt(Ix ** 2 + Iy ** 2)))
 
     ## Saturation d'alpha
     if alpha_query > 35:
@@ -210,18 +219,34 @@ def main():
     Xball_precedente = 0
     Yball_precedente = 0
 
+# -------------------------------------------------------------- #
+##### ---------------  UPDATING THE ACTUATORS -------------- #####
+# -------------------------------------------------------------- #
     while(1) :
         #Detect orange ball
         X, Y = DetectOrangeBall()
 
+#Permet d'actualiser la valeur des servomoteurs en fonction des angles trouvés dans data.txt
+def move_motors(AngleServo1, AngleServo2, AngleServo3):
+    a = 5.406
+    b = -48.65
         # Distance to the center normalise
         X_ball = (X - XCenter)*normX
         Y_ball = (Y - YCenter)*normY
+
+    #Angleservo = a * %PWM - b
+    alpha0 = (AngleServo2 - b)/(a*100)
+    alpha1 = (AngleServo3 - b)/(a*100)
+    alpha2 = (AngleServo1 - b)/(a*100)
 
         # PID Control et Pos to plate angle
         #PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, Xconsigne, Yconsigne):
         a_q, b_q = PIDcontrol(X_ball, Y_ball, Xball_precedente, Yball_precedente, 0, 0)
 
+    #Connfiguration du duty cycle sur les PWM
+    pwm1.changeDutyCycle(alpha0)
+    pwm2.changeDutyCycle(alpha1)
+    pwm3.changeDutyCycle(alpha2)
         Xball_precedente = X_ball
         Yball_precedente = Y_ball
         # Search into the lookup table
